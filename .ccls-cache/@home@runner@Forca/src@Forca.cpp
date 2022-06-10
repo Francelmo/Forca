@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <algorithm>
-#include <cstdlib>
-#include <ctime>
 #include <vector>
 #include <string>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
 #include "../include/Forca.hpp"
 
 using namespace std;
@@ -109,18 +110,53 @@ pair<bool, string> Forca::eh_validoP (string p) {
   * @return {T,""} se os arquivos estiverem válidos, {F,"razão"} caso contrário.
   */
 pair<bool, string> Forca::eh_validoS (string s) {
-  int cont=0;
+  bool t=true, erro_campo=false;
+  int cont=0, j=1;
+  char *pch, score[50];
   pair<bool, string> verifica;
 
   for (int i=0; i<s.length(); i++) {
+      score[i] = s[i]; /*!< converter string -> char */
+  }
+
+  pch = strtok (score, ";");
+
+  //Testar se há algum campo importante vazio.
+  while ((pch!=NULL) && (t==true)) {
+    string teste = pch;
+    
+    if (j==1) {
+      if (teste.compare(0, 1, " ") == 0) {
+        erro_campo = true;
+        t=false;
+      }
+    }
+    else if (j==2) {
+      if (teste.compare(" ") == 0) {
+        erro_campo = true;
+        t=false;
+      }
+    }
+    else if (j==3) {
+      t=false;
+    }
+    
+    pch = strtok (NULL, ";");
+    j++;
+  }
+
+  //Testar quantidade de ';'.
+  for (int i=0; i<s.length(); i++) {
     if (s[i] == ';') {
       cont++;
-      ///Falta analisar os campos [Dificuldade, Nome e Pontuação].
     }
   }
   
   if (cont > 3) {
     verifica = make_pair(false, "Presença de mais de 3 “;” em alguma linha do score.\n");
+  }
+  else if (erro_campo == true) {
+    verifica = make_pair(false, "campo 'Nível' ou 'Nome' estão vazio em alguma linha do score.\n");
   }
   else {
     verifica = make_pair(true, "");  
@@ -445,11 +481,13 @@ void Forca::start () {
     if (quantidade_palavras_certas == quantidade_palavras) {
       cout << "Parabéns! Você acertou todas as palavras do jogo!\n";
       teste_fim = true;
+      quantidade_palavras_certas=0;
     }
   }
 
   //Vefiricar vitória
   if (teste_vitoria == true && teste_fim == true) {
+    chutes.clear();
     gravar_score ();
   }
   else if (teste_vitoria == true) {
@@ -538,6 +576,7 @@ void Forca::gravar_score () {
 
   pontos = 0;
   acertos = 0;
+  m_palavras_certas.clear();
 }
     
 /**

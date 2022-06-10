@@ -6,6 +6,9 @@
 
 using namespace std;
 
+/**
+  * Inicio da função main.
+  */
 int main(int argc, char *argv[]) {
   int opcao, dificuldade;
   bool t = true;
@@ -83,8 +86,3 @@ int main(int argc, char *argv[]) {
   
   return 0;
 }
-
-/**
-  *@Falta: 
-  *Função para retornar o erro na leitura dos arquivos.
-  */
