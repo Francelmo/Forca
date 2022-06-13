@@ -12,7 +12,6 @@ using namespace std;
 int main(int argc, char *argv[]) {
   int opcao, dificuldade;
   bool t = true;
-  char p;
   
   cout << ">  Lendo os arquivos, por favor aguarde... \n";
   cout << "-------------------------------------------------------------\n";
@@ -61,9 +60,9 @@ int main(int argc, char *argv[]) {
       finS.close();
       cout << "\n\n";
 
-      cout << "\nVoltar ao menu inicial?\n";
-      cout << "1 - Sim \n";
-      cout << "2 - Não \n";
+      cout << "\nVoltar ao menu inicial ou Sair?\n";
+      cout << "1 - Voltar \n";
+      cout << "2 - Sair \n";
       cout << "Sua escolha: ";
       cin >> op;
 

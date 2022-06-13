@@ -2,5 +2,4 @@ Nível Fácil; Francelmo; INICIO; 8 pontos
 Nível Fácil; Francelmo; CASA, PODE; 12 pontos
 Nível Médio; Francelmo; ; -3 pontos
 Nível Difícil; Francelmo; CASA; 2 pontos
-Nível Difícil; Francelmo; MISSISSIPI, PARALELEPIPEDO, INICIO, BRASIL, FINAL, GUARDA-CHUVA, PREDIO, CASA, PIANO, PODE, ANOS, TEMOS; 109 pontos
-Nível Fácil; Francelmo; MISSISSIPI, PODE, GUARDA-CHUVA, TEMOS; 33 pontos
+Nível Fácil; Francelmo; PODE; 6 pontos

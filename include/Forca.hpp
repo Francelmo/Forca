@@ -1,5 +1,5 @@
-#ifndef FORCA.HPP
-#define FORCA.HPP
+#ifndef FORCA_HPP
+#define FORCA_HPP
 
 #include <iostream>
 #include <fstream>
@@ -13,14 +13,14 @@ class Forca {
     std::vector<std::string> m_palavras; //<! estrutura para carregar as palavras para o jogo
     std::vector<std::string> m_palavras_certas; //<! estrutura para carregar as palavras que foram acertadas durante o jogo
     std::vector<std::string> chutes; //<! armazena os palpites dados durante o jogo
-    Dificuldade d = Dificuldade::FACIL; //<! dificuldade do jogo
+    Dificuldade d; //<! dificuldade do jogo
     std::string m_palavra_atual; //<! palavra sendo testada atualmente
-    int m_tentativas_restantes = 6; //<! tentativas restantes
-    int quantidade_palavras_certas = 0; //<! salvar o numero de palavras em que acertou.
+    int m_tentativas_restantes; //<! tentativas restantes
+    int quantidade_palavras_certas; //<! salvar o numero de palavras em que acertou.
     int quantidade_palavras; //<! salvar o numero de palavras lida no arquivo.
-    int pontos = 0; //<! Pontução a ser salva no score
-    int acertos = 0; //<! verificar quantidade de acertos nos palpites.
-    bool errou = false; //<! verificar se errou algum dos palpites.
+    int pontos; //<! Pontução a ser salva no score
+    int acertos; //<! verificar quantidade de acertos nos palpites.
+    bool errou; //<! verificar se errou algum dos palpites.
 
   public:
     /**
@@ -132,6 +132,12 @@ class Forca {
       * @return palavra.
       */
     std::string upper(std::string palavra);
-};
 
-#endif //FORCA.HPP
+  /**
+    * Operador para a função transfom().
+    * @return c.
+    */
+    static char lambda (unsigned char c);
+};
+#
+#endif

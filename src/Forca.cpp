@@ -15,14 +15,17 @@ using namespace std;
   * O construtor inicializa o jogo chamando o método inicio() na função princial.
   */
 Forca::Forca () {
-  
+  m_tentativas_restantes = 6;
+  quantidade_palavras_certas = 0;
+  pontos = 0;
+  acertos = 0;
+  errou = false;
 }
 
 /**
   * Método para inicializar o jogo com a leitura dos aquivos e chamando o método start().
   */
 void Forca::inicio () {
-  int cont=0;
   char p[50], s[50];
   bool valida;
   string palavra, score;
@@ -75,11 +78,13 @@ void Forca::inicio () {
   * @return {T,""} se os arquivos estiverem válidos, {F,"razão"} caso contrário.
   */
 pair<bool, string> Forca::eh_validoP (string p) {
-  int cont=0;
+  int tam;
   bool aux=true;
   pair<bool, string> verifica;
 
-  for (int i=0; i<p.length(); i++) {
+  tam = p.length();
+
+  for (int i=0; i<tam; i++) {
     if (p[i] < 65 || p[i] > 90) {
       if(p[i] < 97 || p[i] > 122) {
         if(p[i] != '-') {
@@ -111,11 +116,13 @@ pair<bool, string> Forca::eh_validoP (string p) {
   */
 pair<bool, string> Forca::eh_validoS (string s) {
   bool t=true, erro_campo=false;
-  int cont=0, j=1;
+  int cont=0, j=1, tam;
   char *pch, score[50];
   pair<bool, string> verifica;
 
-  for (int i=0; i<s.length(); i++) {
+  tam = s.length();
+
+  for (int i=0; i<tam; i++) {
       score[i] = s[i]; /*!< converter string -> char */
   }
 
@@ -146,7 +153,7 @@ pair<bool, string> Forca::eh_validoS (string s) {
   }
 
   //Testar quantidade de ';'.
-  for (int i=0; i<s.length(); i++) {
+  for (int i=0; i<tam; i++) {
     if (s[i] == ';') {
       cont++;
     }
@@ -282,10 +289,13 @@ string Forca::get_palavra_atual () {
   * @return T se a palpite pertence à palavra, F caso contrário.
   */
 bool Forca::palpite (string palpite, string &palavra) {
+  int tam;
   char letra;
   bool verifica = false;
 
-  for (int i=0; i<m_palavra_atual.length(); i++) {
+  tam = m_palavra_atual.length();
+
+  for (int i=0; i<tam; i++) {
     if (m_palavra_atual.compare(i, 1, palpite) == 0)
     {      
       letra = palpite[0];
@@ -323,9 +333,11 @@ bool Forca::game_over () {
   * Método que executa o jogo, validando os palpites de entrada e verificando se o jogadar ganhou ou perdeu.
   */
 void Forca::start () {
-  int aux=0;
+  int aux=0, tamP;
   string ch, palavra = m_palavra_atual;
   bool teste_palpite, teste_chute=false, teste_vitoria=false, teste_fim=false;
+
+  tamP = m_palavra_atual.length();
 
   //Nível fácil.
   if (d == 1) {
@@ -333,7 +345,7 @@ void Forca::start () {
 
     q = max(1, tam);
     
-    for (int i=0; i<palavra.length(); i++) {
+    for (int i=0; i<tamP; i++) {
       if ((palavra[i]!=65 && palavra[i]!=69 && palavra[i]!=73 && palavra[i]!=79 && palavra[i]!=85) && (q>0)) {
         string l;
         l.insert(0, palavra, i, 1);
@@ -351,7 +363,7 @@ void Forca::start () {
       string le = *it;
       char l = le[0];
       
-      for (int i=0; i<m_palavra_atual.length(); i++) {
+      for (int i=0; i<tamP; i++) {
         if (m_palavra_atual.compare(i, 1, le) == 0)
         {
           palavra[i] = l;
@@ -364,7 +376,7 @@ void Forca::start () {
     int j;
     vector<string> vogais;
     
-    for (int i=0; i<palavra.length(); i++) {
+    for (int i=0; i<tamP; i++) {
       if ((palavra[i]==65 || palavra[i]==69 || palavra[i]==73 || palavra[i]==79 || palavra[i]==85)) 
       {
         string v;
@@ -385,7 +397,7 @@ void Forca::start () {
     
     j = rand()%vogais.size(); /*!< Escolher vogal de forma aleatória. */
     
-    for (int i=0; i<m_palavra_atual.length(); i++) {
+    for (int i=0; i<tamP; i++) {
       if (m_palavra_atual.compare(i, 1, vogais[j]) == 0)
       {
         string vo = vogais[j];
@@ -401,7 +413,7 @@ void Forca::start () {
     vogais.clear();
   }
   else { //Nível difícil.
-    for (int i=0; i<palavra.length(); i++) {
+    for (int i=0; i<tamP; i++) {
       palavra[i] =  '_';
     }  
   }
@@ -441,7 +453,9 @@ void Forca::start () {
           }
         }
 
-        if (aux == chutes.size()) {
+        int tamC = chutes.size();
+
+        if (aux == tamC) {
           teste_chute = true;
           aux=0;
         }
@@ -466,7 +480,7 @@ void Forca::start () {
     construir_forca();
     
     //Verificar se acerou a palavra.
-    if (acertos == palavra.length()) {
+    if (acertos == tamP) {
       if (errou == false) {
         pontos += 1; /*!< Ponto adicional */
       }
@@ -597,11 +611,17 @@ int Forca::get_tentativas_restantes () {
 }
 
 /**
+  * Operador para a função transfom().
+  * @return c.
+  */
+char Forca::lambda (unsigned char c) { return toupper(c); }
+
+/**
   * Transforma a palavra em maiuscula.
   * @return palavra.
   */
 string Forca::upper (string palavra) {
-  transform (palavra.begin(), palavra.end(), palavra.begin(), [](unsigned char c){ return toupper(c); });
+  transform (palavra.begin(), palavra.end(), palavra.begin(), lambda);
 
   return palavra;
 }

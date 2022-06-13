@@ -1,28 +1,50 @@
-all: main clean-deps
+#Compilador
+COMPILADOR = g++
 
-CXX = clang++
-override CXXFLAGS += -g -Wno-everything
+#Nome do seu executavel
+NOME_EXECUTAVEL = Forca
 
-SRCS = $(shell find . -name '.ccls-cache' -type d -prune -o -type f -name '*.cpp' -print | sed -e 's/ /\\ /g')
-OBJS = $(SRCS:.cpp=.o)
-DEPS = $(SRCS:.cpp=.d)
+#Diretorio dos arquivos binarios
+BIN = ./bin
 
-%.d: %.cpp
-	@set -e; rm -f "$@"; \
-	$(CXX) -MM $(CXXFLAGS) "$<" > "$@.$$$$"; \
-	sed 's,\([^:]*\)\.o[ :]*,\1.o \1.d : ,g' < "$@.$$$$" > "$@"; \
-	rm -f "$@.$$$$"
+#Diretorio dos arquivos .h e .hpp
+INCLUDE = ./include
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c "$<" -o "$@"
+#Diretorio dos arquivos .c e .cpp
+SRC = ./src
 
-include $(DEPS)
+#Para otimizar e mostrar mais avisos
+FLAGS = -g -Wall -ansi -pedantic -O0
 
-main: $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o "$@"
+#Fontes .cpp
+FONTES = $(wildcard $(SRC)/*.cpp)
 
+#Retirar prefixo e sufixo
+OBJLIMPAR = $(notdir $(basename $(FONTES)))
+
+#Adicionar novo prefixo e sufixo
+OBJETOS = $(addprefix $(BIN)/, $(addsuffix .o, $(OBJLIMPAR)))
+
+.PHONY: all cleanObjetos clean tar
+
+all: $(NOME_EXECUTAVEL)
+
+#Compilar e criar os arquivos-objetos
+$(BIN)/%.o: $(SRC)/%.cpp
+	$(COMPILADOR) $(FLAGS) -c "$<" -o "$@"
+
+#Linkar e criar o executavel
+$(NOME_EXECUTAVEL): $(OBJETOS)
+	$(COMPILADOR) $(FLAGS) $(OBJETOS) -o $(BIN)/$@
+
+#Executar programa
+run:
+	$(BIN)/$(NOME_EXECUTAVEL)
+
+#Limpar arquivos .o
+cleanObjetos:
+	rm -f $(BIN)/*.o
+
+#Limpar executavel
 clean:
-	rm -f $(OBJS) $(DEPS) main
-
-clean-deps:
-	rm -f $(DEPS)
+	rm -f $(BIN)/$(NOME_EXECUTAVEL)
